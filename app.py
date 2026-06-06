@@ -3,7 +3,7 @@ import edge_tts
 import uuid
 import asyncio
 
-app = Flask(**name**)
+app = Flask(__name__)
 
 @app.route("/")
 def home():
