@@ -1,31 +1,32 @@
-```python id="6g7r0w"
-from flask import Flask, request, jsonify
+from flask import Flask, request, send_file
 import edge_tts
+import uuid
 import asyncio
 
-app = Flask(__name__)
+app = Flask(**name**)
 
 @app.route("/")
 def home():
-    return "Server Running"
+return "TTS Server Running"
 
-@app.route("/tts", methods=["POST"])
+@app.route("/v1/audio/speech", methods=["POST"])
 def tts():
-    data = request.json
+data = request.json
 
-    text = data.get("input")
-    voice = data.get("voice", "hi-IN-SwaraNeural")
-
-    async def generate():
-        communicate = edge_tts.Communicate(text, voice)
-        await communicate.save("output.mp3")
-
-    asyncio.run(generate())
-
-    return jsonify({
-        "message": "Audio generated successfully"
-    })
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
 ```
+text = data.get("input")
+voice = data.get("voice", "hi-IN-SwaraNeural")
+
+filename = f"{uuid.uuid4()}.mp3"
+
+async def generate():
+    communicate = edge_tts.Communicate(text, voice)
+    await communicate.save(filename)
+
+asyncio.run(generate())
+
+return send_file(filename, mimetype="audio/mpeg")
+```
+
+if **name** == "**main**":
+app.run(host="0.0.0.0", port=10000)
