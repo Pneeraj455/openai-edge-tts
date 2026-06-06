@@ -1,5 +1,5 @@
+```text id="n8v5c1"
 flask
-gevent
-python-dotenv
 edge-tts
-emoji
+gunicorn
+```
