@@ -1,5 +1,3 @@
-:::writing{variant="standard" id="51826"}
-```text
 FROM python:3.12-slim
 
 WORKDIR /app
