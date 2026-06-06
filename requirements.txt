@@ -1,5 +1,3 @@
-```text id="n8v5c1"
 flask
 edge-tts
 gunicorn
-```
