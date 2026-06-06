@@ -1,8 +1,3 @@
-
----
-
-Dockerfile में सिर्फ यह होना चाहिए 👇
-
 :::writing{variant="standard" id="51826"}
 ```text
 FROM python:3.12-slim
