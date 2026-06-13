@@ -1,23 +1,31 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, Response
+import edge_tts
+import asyncio
+import io
 
 app = Flask(__name__)
 
-@app.route("/", methods=["GET"])
-def home():
-    return "Server is running"
+@app.route('/v1/audio/speech', methods=['POST'])
+async def text_to_speech():
+    try:
+        data = request.get_json()
+        text = data.get('input')
+        voice = data.get('voice', 'hi-IN-MadhurNeural')
+        response_format = data.get('response_format', 'mp3')
 
-@app.route("/tts", methods=["POST"])
-def tts():
-    data = request.json
+        communicate = edge_tts.Communicate(text, voice)
+        audio_data = b''
+        async for chunk in communicate.stream():
+            if chunk["type"] == "audio":
+                audio_data += chunk["data"]
 
-    input_text = data.get("input")
-    voice = data.get("voice")
+        return Response(
+            audio_data,
+            mimetype=f'audio/{response_format}',
+            headers={"Content-Disposition": f'attachment; filename=speech.{response_format}'}
+        )
+    except Exception as e:
+        return {"error": str(e)}, 500
 
-    return jsonify({
-        "status": "success",
-        "input": input_text,
-        "voice": voice
-    })
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=10000)
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=10000)
